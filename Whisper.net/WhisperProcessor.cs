@@ -402,12 +402,15 @@ public sealed class WhisperProcessor : IDisposable
         }
 
         var newSegmentCallback = new WhisperNewSegmentCallback(OnNewSegment);
+        var whisperProgressCallback = new WhisperProgressCallback(OnProgress);
         var whisperEncoderBeginCallback = new WhisperEncoderBeginCallback(OnEncoderBegin);
 
         // Creates GCHandles for the delegates so they won't be GC before the processor.
         gcHandles.Add(GCHandle.Alloc(newSegmentCallback));
+        gcHandles.Add(GCHandle.Alloc(whisperProgressCallback));
         gcHandles.Add(GCHandle.Alloc(whisperEncoderBeginCallback));
         whisperParams.OnNewSegment = Marshal.GetFunctionPointerForDelegate(newSegmentCallback);
+        whisperParams.OnProgress = Marshal.GetFunctionPointerForDelegate(whisperProgressCallback);
         whisperParams.OnEncoderBegin = Marshal.GetFunctionPointerForDelegate(whisperEncoderBeginCallback);
 
         return whisperParams;
@@ -492,6 +495,15 @@ public sealed class WhisperProcessor : IDisposable
             }
 
             segmentIndex++;
+        }
+    }
+
+    private void OnProgress(IntPtr ctx, IntPtr state, int progress, IntPtr user_data)
+    {
+        var progressArgs = new ProgressData(progress);
+        foreach (var handler in options.OnProgressEventHandlers)
+        {
+            handler.Invoke(progressArgs);
         }
     }
 

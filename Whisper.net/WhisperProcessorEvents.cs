@@ -4,6 +4,8 @@ namespace Whisper.net;
 
 public delegate void OnSegmentEventHandler(SegmentData e);
 
+public delegate void OnProgressEventHandler(ProgressData e);
+
 public delegate bool OnEncoderBeginEventHandler(EncoderBeginData e);
 
 public class EncoderBeginData
@@ -67,4 +69,17 @@ public class SegmentData
     /// Gets the language of the current segment.
     /// </summary>
     public string Language { get; }
+}
+
+public class ProgressData
+{
+    public ProgressData(int progress)
+    {
+        Progress = progress;
+    }
+
+    /// <summary>
+    /// Gets the progress percentage.
+    /// </summary>
+    public int Progress { get; }
 }

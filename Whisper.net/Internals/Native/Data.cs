@@ -30,6 +30,9 @@ internal struct WhisperParamBeamSearch
 internal delegate void WhisperNewSegmentCallback(IntPtr ctx, IntPtr state, int n_new, IntPtr user_data);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
+internal delegate void WhisperProgressCallback(IntPtr ctx, IntPtr state, int progress, IntPtr user_data);
+
+[UnmanagedFunctionPointer(CallingConvention.Cdecl)]
 internal delegate bool WhisperEncoderBeginCallback(IntPtr ctx, IntPtr state, IntPtr user_data);
 
 [UnmanagedFunctionPointer(CallingConvention.Cdecl)]
@@ -99,6 +102,8 @@ internal struct WhisperFullParams
 
     // tokens to provide to the whisper decoder as initial prompt
     // these are prepended to any existing text context from a previous call
+    public IntPtr InitialPrompt;
+
     public IntPtr PromptTokens;
 
     public int PromptNTokens;
@@ -140,6 +145,10 @@ internal struct WhisperFullParams
     public IntPtr OnNewSegment;
 
     public IntPtr OnNewSegmentUserData;
+
+    public IntPtr OnProgress;
+
+    public IntPtr OnProgressUserData;
 
     public IntPtr OnEncoderBegin;
 

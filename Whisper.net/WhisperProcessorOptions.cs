@@ -69,6 +69,9 @@ internal sealed class WhisperProcessorOptions
 
     public List<OnSegmentEventHandler> OnSegmentEventHandlers { get; set; } = new();
 
+    public List<OnProgressEventHandler> OnProgressEventHandlers { get; set; } = new();
+
     public List<OnEncoderBeginEventHandler> OnEncoderBeginEventHandlers { get; set; } = new();
+
     public bool ComputeProbabilities { get; set; }
 }

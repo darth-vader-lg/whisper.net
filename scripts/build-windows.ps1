@@ -23,6 +23,42 @@ function BuildWindowsX64() {
     cp build/win-x64/bin/Release/whisper.dll ./Whisper.net/runtimes/win-x64/whisper.dll
 }
 
+function BuildWindowsX64AVX1() {
+    Write-Host "Building Windows binaries for x86_64 AVX1"
+
+    if((Test-Path "build/win-x64-avx1")) {
+        Write-Host "Deleting old build files for windows x86_64-avx1";
+        Remove-Item -Force -Recurse -Path "build/win-x64-avx1"
+    }
+    
+    New-Item -ItemType Directory -Force -Path "build/win-x64-avx1"
+    
+    #call CMake to generate the makefiles
+    cmake -S . -B build/win-x64-avx1  -A x64 -DWHISPER_NO_AVX2=ON
+    cmake --build build/win-x64-avx1 --config Release
+    
+    #copy the binaries to runtimes/windows-x64
+    cp build/win-x64-avx1/bin/Release/whisper.dll ./Whisper.net/runtimes/win-x64-avx1/whisper.dll
+}
+
+function BuildWindowsX64NoAVX() {
+    Write-Host "Building Windows binaries for x86_64 without AVX"
+
+    if((Test-Path "build/win-x64-noavx")) {
+        Write-Host "Deleting old build files for windows x86_64-noavx";
+        Remove-Item -Force -Recurse -Path "build/win-x64-noavx"
+    }
+    
+    New-Item -ItemType Directory -Force -Path "build/win-x64-noavx"
+    
+    #call CMake to generate the makefiles
+    cmake -S . -B build/win-x64-noavx  -A x64 -DWHISPER_NO_AVX=ON
+    cmake --build build/win-x64-noavx --config Release
+    
+    #copy the binaries to runtimes/windows-x64
+    cp build/win-x64-noavx/bin/Release/whisper.dll ./Whisper.net/runtimes/win-x64-noavx/whisper.dll
+}
+
 function BuildWindowsX86() {
     Write-Host "Building Windows binaries for x86"
 
@@ -39,6 +75,42 @@ function BuildWindowsX86() {
     
     #copy the binaries to runtimes/windows-x86
     cp build/win-x86/bin/Release/whisper.dll ./Whisper.net/runtimes/win-x86/whisper.dll
+}
+
+function BuildWindowsX86AVX1() {
+    Write-Host "Building Windows binaries for x86 AVX1"
+
+    if((Test-Path "build/win-x86-avx1")) {
+        Write-Host "Deleting old build files for windows x86-avx1";
+        Remove-Item -Force -Recurse -Path "build/win-x86-avx1"
+    }
+    
+    New-Item -ItemType Directory -Force -Path "build/win-x86-avx1"
+    
+    #call CMake to generate the makefiles
+    cmake -S . -B build/win-x86-avx1  -A Win32 -DWHISPER_NO_AVX2=ON
+    cmake --build build/win-x86-avx1 --config Release
+    
+    #copy the binaries to runtimes/windows-x86
+    cp build/win-x86-avx1/bin/Release/whisper.dll ./Whisper.net/runtimes/win-x86-avx1/whisper.dll
+}
+
+function BuildWindowsX86NoAVX() {
+    Write-Host "Building Windows binaries for x86 without AVX"
+
+    if((Test-Path "build/win-x86-noavx")) {
+        Write-Host "Deleting old build files for windows x86-noavx";
+        Remove-Item -Force -Recurse -Path "build/win-x86-noavx"
+    }
+    
+    New-Item -ItemType Directory -Force -Path "build/win-x86-noavx"
+    
+    #call CMake to generate the makefiles
+    cmake -S . -B build/win-x86-noavx  -A Win32 -DWHISPER_NO_AVX=ON
+    cmake --build build/win-x86-noavx --config Release
+    
+    #copy the binaries to runtimes/windows-x64
+    cp build/win-x86-noavx/bin/Release/whisper.dll ./Whisper.net/runtimes/win-x86-noavx/whisper.dll
 }
 
 function BuildWindowsArm64() {
@@ -78,6 +150,10 @@ function BuildWindowsArm() {
 }
 
 BuildWindowsX64
+BuildWindowsX64AVX1
+BuildWindowsX64NoAVX
 BuildWindowsX86
+BuildWindowsX86AVX1
+BuildWindowsX86NoAVX
 BuildWindowsArm
 BuildWindowsArm64
